@@ -26,7 +26,10 @@ language. It aims to provide Bengali-friendly programming syntax and a simple
 foundation for learning programming, language design, and compiler or
 interpreter development.
 
-The project is currently under active development.
+The repository now contains a self-contained C11 compiler/runtime. It parses
+BanglaScript into an AST and executes it with lexical environments, functions,
+and source-line diagnostics. The implementation has no third-party
+dependencies.
 
 ## Goals
 
@@ -42,7 +45,7 @@ The project is currently under active development.
 - Arithmetic and logical expressions
 - Conditional statements
 - Loops
-- Functions
+- Functions and return values
 - Clear syntax and helpful error messages
 
 ## Getting Started
@@ -57,58 +60,134 @@ You need a C compiler and Git installed on your system.
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/bangla-script.git
-cd bangla-script
+git clone https://github.com/nosibbiswas22/bangla_script.git
+cd bangla_script
 ```
 
 ### Build
 
-> Update the source file and executable names below to match the implementation
-> as the project grows.
+The project uses a modular layout:
+
+```text
+include/   public compiler and runtime interfaces
+src/       lexer, parser, runtime, symbol table, and CLI sources
+tests/     BanglaScript sample programs
+```
+
+Using Make:
 
 ```bash
-gcc -Wall -Wextra -std=c11 -o bangla-script *.c
+make
+```
+
+Run the sample integration program:
+
+```bash
+make test
+```
+
+The equivalent direct GCC command is:
+
+```bash
+gcc -Wall -Wextra -std=c11 -pedantic -Iinclude -o blang src/*.c -lm
 ```
 
 ### Run
 
 ```bash
-./bangla-script
+./blang tests/hello.bs
 ```
 
 On Windows, run:
 
 ```powershell
-.\bangla-script.exe
+.\blang.exe tests\hello.bs
 ```
 
-## Example
-
-The language syntax is under development. A future example may look like this:
+After building, a source file can be run with the short command:
 
 ```text
-দেখাও "বাংলা ভাষায় প্রোগ্রামিং!"
+blang fileName.bs
 ```
 
-## Project Status
+In PowerShell, use `.\blang.exe fileName.bs` when the project directory is not
+on `PATH`. To use `blang fileName.bs` from any CMD or PowerShell window, add
+the project directory to your user `PATH`:
+
+```powershell
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+[Environment]::SetEnvironmentVariable(
+    "Path",
+    $userPath + ";E:\Code-X\c\bangla_script",
+    "User"
+)
+```
+
+Restart CMD or PowerShell after changing `PATH`.
+
+`blang` currently compiles the C implementation into a BanglaScript runtime
+and executes `.bs` source files. It does not yet emit native machine-code
+executables like GCC.
+
+## Language reference
+
+Statements end with `;`. Braces create blocks. Bengali keywords have English
+aliases, so either spelling can be used:
+
+```text
+ধরি নাম = "বাংলা";
+ফাংশন অভিবাদন(ব্যক্তি) {
+    দেখাও ব্যক্তি + ", পৃথিবী!";
+}
+অভিবাদন(নাম);
+
+ধরি n = 1;
+যতক্ষণ (n <= 5) {
+    যদি (n % 2 == 0) দেখাও n;
+    নাহলে দেখাও "বিজোড়";
+    n = n + 1;
+}
+```
+
+Supported Bengali keywords are `ধরি` (let), `দেখাও` (print), `যদি`/`নাহলে`
+(if/else), `যতক্ষণ` (while), `ফাংশন` (function), `ফেরত` (return), `সত্য`,
+`মিথ্যা`, and `শূন্য`. Operators include arithmetic, comparison, `&&`, `||`,
+`!`, assignment, and function calls. Strings support `\n`, `\t`, `\"`, and
+`\\`. Comments begin with `//`.
+
+Run a program from a file:
+
+```powershell
+.\blang.exe tests\hello.bs
+```
+
+On Windows, the compiler configures the console for UTF-8 automatically. If
+an older terminal still displays Bengali text incorrectly, run
+`chcp 65001` before starting the program and use a Unicode-capable font such
+as Nirmala UI or Noto Sans Bengali.
+
+With no file argument the executable starts a small interactive REPL.
+
+## Project status
 
 BanglaScript is an experimental project. Syntax, implementation details, and
 features may change as development continues.
 
-## Contributing
+## Community and contribution
 
-Contributions, ideas, and suggestions are welcome. To contribute:
+Contributions, bug reports, ideas, and documentation improvements are welcome.
+Please read the project guidelines before participating:
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Make your changes.
-4. Test your changes.
-5. Open a pull request with a clear description.
+- [Contributing guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
+
+When reporting a bug, include the operating system, compiler version, steps to
+reproduce the issue, and the smallest relevant `.bs` program.
 
 ## License
 
-No license has been specified yet. Add a license before distributing or
-reusing this project.
+BanglaScript is distributed under the [MIT License](LICENSE).
 
 ---
 

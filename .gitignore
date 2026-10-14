@@ -1,0 +1,17 @@
+# Build artifacts
+blang
+blang.exe
+bangla-script
+bangla-script.exe
+
+# Object files
+*.o
+*.obj
+
+# IDE and operating-system files
+.vscode/
+.idea/
+*.user
+*.suo
+.DS_Store
+Thumbs.db
