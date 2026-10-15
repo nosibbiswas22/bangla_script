@@ -1,0 +1,10 @@
+class Person {
+    init(name) { this.name = name; }
+    greet() { return "Hello " + this.name; }
+}
+class Student < Person {
+    init(name, grade) { super.init(name); this.grade = grade; }
+    greet() { return super.greet() + " (" + this.grade + ")"; }
+}
+let student = Student("রহিম", "A");
+print student.greet();
